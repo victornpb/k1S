@@ -106,9 +106,9 @@ while true; do
                 4) HUE=$((HUE + 1)); set_control "hue" "$HUE";;
                 5) GAMMA=$((GAMMA + 10)); set_control "gamma" "$GAMMA";;
                 6) GAIN=$((GAIN + 1)); set_control "gain" "$GAIN";;
-                7) WHITE_BALANCE_TEMP_AUTO=$((1 - WHITE_BALANCE_TEMP_AUTO)); set_control "white_balance_temperature_auto" "$WHITE_BALANCE_TEMP_AUTO";;
+                7) WHITE_BALANCE_TEMP_AUTO=$((WHITE_BALANCE_TEMP_AUTO - 1)); set_control "white_balance_temperature_auto" "$WHITE_BALANCE_TEMP_AUTO";;
                 8) POWER_LINE_FREQ=$((POWER_LINE_FREQ + 1)); set_control "power_line_frequency" "$POWER_LINE_FREQ";;
-                9) WHITE_BALANCE_TEMP=$((WHITE_BALANCE_TEMP + 50)); set_control "white_balance_temperature" "$WHITE_BALANCE_TEMP";;
+                9) WHITE_BALANCE_TEMP=$((WHITE_BALANCE_TEMP + 10)); set_control "white_balance_temperature" "$WHITE_BALANCE_TEMP";;
                 10) SHARPNESS=$((SHARPNESS + 1)); set_control "sharpness" "$SHARPNESS";;
                 11) BACKLIGHT_COMP=$((BACKLIGHT_COMP + 1)); set_control "backlight_compensation" "$BACKLIGHT_COMP";;
                 12) EXPOSURE_AUTO=$((EXPOSURE_AUTO + 1)); set_control "exposure_auto" "$EXPOSURE_AUTO";;
@@ -125,9 +125,9 @@ while true; do
                 4) HUE=$((HUE - 1)); set_control "hue" "$HUE";;
                 5) GAMMA=$((GAMMA - 10)); set_control "gamma" "$GAMMA";;
                  6) GAIN=$((GAIN - 1)); set_control "gain" "$GAIN";;
-                 7) WHITE_BALANCE_TEMP_AUTO=$((50 - WHITE_BALANCE_TEMP_AUTO)); set_control "white_balance_temperature_auto" "$WHITE_BALANCE_TEMP_AUTO";;
+                 7) WHITE_BALANCE_TEMP_AUTO=$((WHITE_BALANCE_TEMP_AUTO + 1)); set_control "white_balance_temperature_auto" "$WHITE_BALANCE_TEMP_AUTO";;
                  8) POWER_LINE_FREQ=$((POWER_LINE_FREQ - 1)); set_control "power_line_frequency" "$POWER_LINE_FREQ";;
-                 9) WHITE_BALANCE_TEMP=$((WHITE_BALANCE_TEMP - 1)); set_control "white_balance_temperature" "$WHITE_BALANCE_TEMP";;
+                 9) WHITE_BALANCE_TEMP=$((WHITE_BALANCE_TEMP - 10)); set_control "white_balance_temperature" "$WHITE_BALANCE_TEMP";;
                 10) SHARPNESS=$((SHARPNESS - 1)); set_control "sharpness" "$SHARPNESS";;
                 11) BACKLIGHT_COMP=$((BACKLIGHT_COMP - 1)); set_control "backlight_compensation" "$BACKLIGHT_COMP";;
                 12) EXPOSURE_AUTO=$((EXPOSURE_AUTO - 1)); set_control "exposure_auto" "$EXPOSURE_AUTO";;
