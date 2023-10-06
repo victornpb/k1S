@@ -30,20 +30,20 @@ while true; do
     clear
     echo "Webcam Controls:"
     echo "-----------------"
-    echo "$([ $selected -eq  1 ] && echo "=>" || echo "  ") Brightness ...................... $BRIGHTNESS    (-64 to 64)"
-    echo "$([ $selected -eq  2 ] && echo "=>" || echo "  ") Contrast ........................ $CONTRAST    (0 to 64)"
-    echo "$([ $selected -eq  3 ] && echo "=>" || echo "  ") Saturation ...................... $SATURATION    (0 to 128)"
-    echo "$([ $selected -eq  4 ] && echo "=>" || echo "  ") Hue ............................. $HUE    (-40 to 40)"
-    echo "$([ $selected -eq  5 ] && echo "=>" || echo "  ") Gamma ........................... $GAMMA    (72 to 500)"
-    echo "$([ $selected -eq  6 ] && echo "=>" || echo "  ") Gain ............................ $GAIN    (0 to 100)"
-    echo "$([ $selected -eq  7 ] && echo "=>" || echo "  ") White Balance Temperature Auto .. $WHITE_BALANCE_TEMP_AUTO    (On/Off)"
-    echo "$([ $selected -eq  8 ] && echo "=>" || echo "  ") Power Line Frequency ............ $POWER_LINE_FREQ    (0 to 2)"
-    echo "$([ $selected -eq  9 ] && echo "=>" || echo "  ") White Balance Temperature ....... $WHITE_BALANCE_TEMP    (2800 to 6500)"
-    echo "$([ $selected -eq 10 ] && echo "=>" || echo "  ") Sharpness ....................... $SHARPNESS    (0 to 6)"
-    echo "$([ $selected -eq 11 ] && echo "=>" || echo "  ") Backlight Compensation .......... $BACKLIGHT_COMP    (0 to 2)"
-    echo "$([ $selected -eq 12 ] && echo "=>" || echo "  ") Exposure Auto ................... $EXPOSURE_AUTO    (1=Manual or 3=Auto)"
-    echo "$([ $selected -eq 13 ] && echo "=>" || echo "  ") Exposure Absolute ............... $EXPOSURE_ABSOLUTE    (1 to 5000)"
-    echo "$([ $selected -eq 14 ] && echo "=>" || echo "  ") Exposure Auto Priority ......... $EXPOSURE_AUTO_PRIORITY    "
+    printf "%s Brightness ...................... %6d (-64 to 64)\n" "$([ $selected -eq  1 ] && echo " *" || echo "  ")" "$BRIGHTNESS"
+    printf "%s Contrast ........................ %6d (0 to 64)\n" "$([ $selected -eq  2 ] && echo " *" || echo "  ")" "$CONTRAST"
+    printf "%s Saturation ...................... %6d (0 to 128)\n" "$([ $selected -eq  3 ] && echo " *" || echo "  ")" "$SATURATION"
+    printf "%s Hue ............................. %6d (-40 to 40)\n" "$([ $selected -eq  4 ] && echo " *" || echo "  ")" "$HUE"
+    printf "%s Gamma ........................... %6d (72 to 500)\n" "$([ $selected -eq  5 ] && echo " *" || echo "  ")" "$GAMMA"
+    printf "%s Gain ............................ %6d (0 to 100)\n" "$([ $selected -eq  6 ] && echo " *" || echo "  ")" "$GAIN"
+    printf "%s White Balance Temperature Auto .. %6d (0=Off / 1=On)\n" "$([ $selected -eq  7 ] && echo " *" || echo "  ")" "$WHITE_BALANCE_TEMP_AUTO"
+    printf "%s Power Line Frequency ............ %6d (0 to 2)\n" "$([ $selected -eq  8 ] && echo " *" || echo "  ")" "$POWER_LINE_FREQ"
+    printf "%s White Balance Temperature ....... %6d (2800 to 6500)\n" "$([ $selected -eq  9 ] && echo " *" || echo "  ")" "$WHITE_BALANCE_TEMP"
+    printf "%s Sharpness ....................... %6d (0 to 6)\n" "$([ $selected -eq 10 ] && echo " *" || echo "  ")" "$SHARPNESS"
+    printf "%s Backlight Compensation .......... %6d (0 to 2)\n" "$([ $selected -eq 11 ] && echo " *" || echo "  ")" "$BACKLIGHT_COMP"
+    printf "%s Exposure Auto ................... %6d (1=Manual / 3=Auto)\n" "$([ $selected -eq 12 ] && echo " *" || echo "  ")" "$EXPOSURE_AUTO"
+    printf "%s Exposure Absolute ............... %6d (1 to 5000)\n" "$([ $selected -eq 13 ] && echo " *" || echo "  ")" "$EXPOSURE_ABSOLUTE"
+    printf "%s Exposure Auto Priority .......... %6d\n" "$([ $selected -eq 14 ] && echo " *" || echo "  ")" "$EXPOSURE_AUTO_PRIORITY"
     echo "-----------------"
     echo "W/S: Select a control"
     echo "A: Value +  D: Value -"
@@ -94,10 +94,10 @@ while true; do
                 3) SATURATION=$((SATURATION - 5)); set_control "saturation" "$SATURATION";;
                 4) HUE=$((HUE - 1)); set_control "hue" "$HUE";;
                 5) GAMMA=$((GAMMA - 10)); set_control "gamma" "$GAMMA";;
-                6) GAIN=$((GAIN - 1)); set_control "gain" "$GAIN";;
-                7) WHITE_BALANCE_TEMP_AUTO=$((50 - WHITE_BALANCE_TEMP_AUTO)); set_control "white_balance_temperature_auto" "$WHITE_BALANCE_TEMP_AUTO";;
-                8) POWER_LINE_FREQ=$((POWER_LINE_FREQ - 1)); set_control "power_line_frequency" "$POWER_LINE_FREQ";;
-                9) WHITE_BALANCE_TEMP=$((WHITE_BALANCE_TEMP - 1)); set_control "white_balance_temperature" "$WHITE_BALANCE_TEMP";;
+                 6) GAIN=$((GAIN - 1)); set_control "gain" "$GAIN";;
+                 7) WHITE_BALANCE_TEMP_AUTO=$((50 - WHITE_BALANCE_TEMP_AUTO)); set_control "white_balance_temperature_auto" "$WHITE_BALANCE_TEMP_AUTO";;
+                 8) POWER_LINE_FREQ=$((POWER_LINE_FREQ - 1)); set_control "power_line_frequency" "$POWER_LINE_FREQ";;
+                 9) WHITE_BALANCE_TEMP=$((WHITE_BALANCE_TEMP - 1)); set_control "white_balance_temperature" "$WHITE_BALANCE_TEMP";;
                 10) SHARPNESS=$((SHARPNESS - 1)); set_control "sharpness" "$SHARPNESS";;
                 11) BACKLIGHT_COMP=$((BACKLIGHT_COMP - 1)); set_control "backlight_compensation" "$BACKLIGHT_COMP";;
                 12) EXPOSURE_AUTO=$((EXPOSURE_AUTO - 1)); set_control "exposure_auto" "$EXPOSURE_AUTO";;
