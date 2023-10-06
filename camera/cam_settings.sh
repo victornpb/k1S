@@ -52,9 +52,11 @@ update_script() {
             fi
         else
             echo "Update canceled."
+            read
         fi
     else
         echo "Your script is already up to date."
+        read
     fi
 }
 
