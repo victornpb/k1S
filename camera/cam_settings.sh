@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Initial values for webcam controls
 BRIGHTNESS=-10
@@ -28,29 +28,27 @@ set_control() {
 
 while true; do
     clear
-echo "Webcam Controls:"
-echo "-----------------"
-echo "$([ $selected -eq  1 ] && echo "=>" || echo "  ") Brightness ...................... $BRIGHTNESS    (-64 to 64)"
-echo "$([ $selected -eq  2 ] && echo "=>" || echo "  ") Contrast ........................ $CONTRAST    (0 to 64)"
-echo "$([ $selected -eq  3 ] && echo "=>" || echo "  ") Saturation ...................... $SATURATION    (0 to 128)"
-echo "$([ $selected -eq  4 ] && echo "=>" || echo "  ") Hue ............................. $HUE    (-40 to 40)"
-echo "$([ $selected -eq  5 ] && echo "=>" || echo "  ") Gamma ........................... $GAMMA    (72 to 500)"
-echo "$([ $selected -eq  6 ] && echo "=>" || echo "  ") Gain ............................ $GAIN    (0 to 100)"
-echo "$([ $selected -eq  7 ] && echo "=>" || echo "  ") White Balance Temperature Auto .. $WHITE_BALANCE_TEMP_AUTO    (On/Off)"
-echo "$([ $selected -eq  8 ] && echo "=>" || echo "  ") Power Line Frequency ............ $POWER_LINE_FREQ    (0 to 2)"
-echo "$([ $selected -eq  9 ] && echo "=>" || echo "  ") White Balance Temperature ....... $WHITE_BALANCE_TEMP    (2800 to 6500)"
-echo "$([ $selected -eq 10 ] && echo "=>" || echo "  ") Sharpness ....................... $SHARPNESS    (0 to 6)"
-echo "$([ $selected -eq 11 ] && echo "=>" || echo "  ") Backlight Compensation .......... $BACKLIGHT_COMP    (0 to 2)"
-echo "$([ $selected -eq 12 ] && echo "=>" || echo "  ") Exposure Auto ................... $EXPOSURE_AUTO    (1=Manual or 3=Auto)"
-echo "$([ $selected -eq 13 ] && echo "=>" || echo "  ") Exposure Absolute ............... $EXPOSURE_ABSOLUTE    (1 to 5000)"
-echo "$([ $selected -eq 14 ] && echo "=>" || echo "  ") Exposure Auto Priority ......... $EXPOSURE_AUTO_PRIORITY    "
-echo "-----------------"
-echo "W/S: Select a control"
-echo "A: Value +  D: Value -"
-echo "Q: Quit"
-echo "-----------------"
-
-
+    echo "Webcam Controls:"
+    echo "-----------------"
+    echo "$([ $selected -eq  1 ] && echo "=>" || echo "  ") Brightness ...................... $BRIGHTNESS    (-64 to 64)"
+    echo "$([ $selected -eq  2 ] && echo "=>" || echo "  ") Contrast ........................ $CONTRAST    (0 to 64)"
+    echo "$([ $selected -eq  3 ] && echo "=>" || echo "  ") Saturation ...................... $SATURATION    (0 to 128)"
+    echo "$([ $selected -eq  4 ] && echo "=>" || echo "  ") Hue ............................. $HUE    (-40 to 40)"
+    echo "$([ $selected -eq  5 ] && echo "=>" || echo "  ") Gamma ........................... $GAMMA    (72 to 500)"
+    echo "$([ $selected -eq  6 ] && echo "=>" || echo "  ") Gain ............................ $GAIN    (0 to 100)"
+    echo "$([ $selected -eq  7 ] && echo "=>" || echo "  ") White Balance Temperature Auto .. $WHITE_BALANCE_TEMP_AUTO    (On/Off)"
+    echo "$([ $selected -eq  8 ] && echo "=>" || echo "  ") Power Line Frequency ............ $POWER_LINE_FREQ    (0 to 2)"
+    echo "$([ $selected -eq  9 ] && echo "=>" || echo "  ") White Balance Temperature ....... $WHITE_BALANCE_TEMP    (2800 to 6500)"
+    echo "$([ $selected -eq 10 ] && echo "=>" || echo "  ") Sharpness ....................... $SHARPNESS    (0 to 6)"
+    echo "$([ $selected -eq 11 ] && echo "=>" || echo "  ") Backlight Compensation .......... $BACKLIGHT_COMP    (0 to 2)"
+    echo "$([ $selected -eq 12 ] && echo "=>" || echo "  ") Exposure Auto ................... $EXPOSURE_AUTO    (1=Manual or 3=Auto)"
+    echo "$([ $selected -eq 13 ] && echo "=>" || echo "  ") Exposure Absolute ............... $EXPOSURE_ABSOLUTE    (1 to 5000)"
+    echo "$([ $selected -eq 14 ] && echo "=>" || echo "  ") Exposure Auto Priority ......... $EXPOSURE_AUTO_PRIORITY    "
+    echo "-----------------"
+    echo "W/S: Select a control"
+    echo "A: Value +  D: Value -"
+    echo "Q: Quit"
+    echo "-----------------"
 
     read -n 1 -s input
 
