@@ -29,7 +29,7 @@ set_control() {
 while true; do
     clear
     echo "-------------------------------------------------------------------------------"
-    echo " Webcam Image Controls                                    github.com/victornpb "
+    echo " Webcam Image Controls v1.0.0                             github.com/victornpb "
     echo "-------------------------------------------------------------------------------"
     printf " %s Brightness ...................... %5d\t(-64 to 64)\n" "$([ $selected -eq  1 ] && echo "▶ " || echo "")" "$BRIGHTNESS"
     printf " %s Contrast ........................ %5d\t(0 to 64)\n" "$([ $selected -eq  2 ] && echo "▶ " || echo "")" "$CONTRAST"
