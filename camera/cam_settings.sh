@@ -28,15 +28,22 @@ set_control() {
 
 # Function to update the script
 update_script() {
-    wget -O /usr/cam_settings.sh https://raw.githubusercontent.com/victornpb/k1S/main/camera/cam_settings.sh
-    chmod +x /usr/cam_settings.sh
-    /usr/cam_settings.sh
+    echo "Are you sure you want to update the script? (Y/N)"
+    read -n 1 -r response
+    echo
+    if [[ $response =~ ^[Yy]$ ]]; then
+        wget -O /usr/cam_settings.sh https://raw.githubusercontent.com/victornpb/k1S/main/camera/cam_settings.sh
+        chmod +x /usr/cam_settings.sh
+        exec /usr/cam_settings.sh
+    else
+        echo "Update canceled."
+    fi
 }
 
 while true; do
     clear
     echo "-------------------------------------------------------------------------------"
-    echo " Webcam Image Controls v1.0.0                             github.com/victornpb "
+    echo " Webcam Image Controls v1.1.0                             github.com/victornpb "
     echo "-------------------------------------------------------------------------------"
     printf " %s Brightness ...................... %5d\t(-64 to 64)\n" "$([ $selected -eq  1 ] && echo "▶ " || echo "")" "$BRIGHTNESS"
     printf " %s Contrast ........................ %5d\t(0 to 64)\n" "$([ $selected -eq  2 ] && echo "▶ " || echo "")" "$CONTRAST"
