@@ -48,11 +48,11 @@ update_script() {
             fi
         else
             echo "Update canceled!"
-            read -n 1 && echo
+            read -n 1
         fi
     else
         echo "Your script is already up to date."
-        read -n 1 && echo
+        read -n 1
     fi
 }
 
