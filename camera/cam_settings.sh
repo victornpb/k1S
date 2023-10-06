@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=v1.1.2
+VERSION=v1.1.3
 
 # Initial values for webcam controls
 BRIGHTNESS=-10
