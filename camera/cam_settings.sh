@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=v1.1.1
+VERSION=v1.1.2
 
 # Initial values for webcam controls
 BRIGHTNESS=-10
@@ -31,19 +31,15 @@ set_control() {
 update_script() {
     remote_script=$(wget --no-check-certificate -qO- https://raw.githubusercontent.com/victornpb/k1S/main/camera/cam_settings.sh)
     local_script=$(cat /usr/cam_settings.sh)  # Read the current script content
-
     if [ "$remote_script" != "$local_script" ]; then
         second_line=$(echo "$remote_script" | cut -d$'\n' -f 2)
         echo "A new version is available ($second_line)! Do you want to update? (Y/N)"
-        read -n 1 -r response
-        echo
+        read -n 1 -r response && echo
         if [[ $response =~ ^[Yy]$ ]]; then
             echo "$remote_script" > /usr/cam_settings.sh  # Overwrite the local script with the remote version
             chmod +x /usr/cam_settings.sh
-
             echo "The script has been updated. Do you want to run the new version? (Y/N)"
-            read -n 1 -r run_response
-            echo
+            read -n 1 -r run_response && echo
             if [[ $run_response =~ ^[Yy]$ ]]; then
                 exec /usr/cam_settings.sh  # Run the new version
             else
@@ -51,12 +47,12 @@ update_script() {
                 exit
             fi
         else
-            echo "Update canceled."
-            read
+            echo "Update canceled!"
+            read -n 1 && echo
         fi
     else
         echo "Your script is already up to date."
-        read
+        read -n 1 && echo
     fi
 }
 
