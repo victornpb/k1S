@@ -1,4 +1,5 @@
 #!/bin/sh
+VERSION=v1.1.0
 
 # Initial values for webcam controls
 BRIGHTNESS=-10
@@ -28,11 +29,12 @@ set_control() {
 
 # Function to check and update the script
 update_script() {
-    remote_script=$(wget -qO- https://raw.githubusercontent.com/victornpb/k1S/main/camera/cam_settings.sh)
+    remote_script=$(wget --no-check-certificate -qO- https://raw.githubusercontent.com/victornpb/k1S/main/camera/cam_settings.sh)
     local_script=$(cat /usr/cam_settings.sh)  # Read the current script content
 
     if [ "$remote_script" != "$local_script" ]; then
-        echo "A new version is available. Do you want to update? (Y/N)"
+        second_line=$(echo "$remote_script" | cut -d$'\n' -f 2)
+        echo "A new version is available ($second_line)! Do you want to update? (Y/N)"
         read -n 1 -r response
         echo
         if [[ $response =~ ^[Yy]$ ]]; then
@@ -45,7 +47,8 @@ update_script() {
             if [[ $run_response =~ ^[Yy]$ ]]; then
                 exec /usr/cam_settings.sh  # Run the new version
             else
-                echo "Update completed, but the new version is not run."
+                echo "Update completed!"
+                exit
             fi
         else
             echo "Update canceled."
@@ -59,7 +62,7 @@ update_script() {
 while true; do
     clear
     echo "-------------------------------------------------------------------------------"
-    echo " Webcam Image Controls v1.1.1                             github.com/victornpb "
+    echo " Webcam Image Controls $VERSION                             github.com/victornpb "
     echo "-------------------------------------------------------------------------------"
     printf " %s Brightness ...................... %5d\t(-64 to 64)\n" "$([ $selected -eq  1 ] && echo "▶ " || echo "")" "$BRIGHTNESS"
     printf " %s Contrast ........................ %5d\t(0 to 64)\n" "$([ $selected -eq  2 ] && echo "▶ " || echo "")" "$CONTRAST"
