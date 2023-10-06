@@ -26,19 +26,35 @@ set_control() {
     v4l2-ctl -d /dev/video4 --set-ctrl "$control_name=$control_value"
 }
 
-# Function to update the script
+# Function to check and update the script
 update_script() {
-    echo "Are you sure you want to update the script? (Y/N)"
-    read -n 1 -r response
-    echo
-    if [[ $response =~ ^[Yy]$ ]]; then
-        wget -O /usr/cam_settings.sh https://raw.githubusercontent.com/victornpb/k1S/main/camera/cam_settings.sh
-        chmod +x /usr/cam_settings.sh
-        exec /usr/cam_settings.sh
+    remote_script=$(wget -qO- https://raw.githubusercontent.com/victornpb/k1S/main/camera/cam_settings.sh)
+    local_script=$(cat /usr/cam_settings.sh)  # Read the current script content
+
+    if [ "$remote_script" != "$local_script" ]; then
+        echo "A new version is available. Do you want to update? (Y/N)"
+        read -n 1 -r response
+        echo
+        if [[ $response =~ ^[Yy]$ ]]; then
+            echo "$remote_script" > /usr/cam_settings.sh  # Overwrite the local script with the remote version
+            chmod +x /usr/cam_settings.sh
+
+            echo "The script has been updated. Do you want to run the new version? (Y/N)"
+            read -n 1 -r run_response
+            echo
+            if [[ $run_response =~ ^[Yy]$ ]]; then
+                exec /usr/cam_settings.sh  # Run the new version
+            else
+                echo "Update completed, but the new version is not run."
+            fi
+        else
+            echo "Update canceled."
+        fi
     else
-        echo "Update canceled."
+        echo "Your script is already up to date."
     fi
 }
+
 
 while true; do
     clear
