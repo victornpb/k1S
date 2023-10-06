@@ -26,6 +26,13 @@ set_control() {
     v4l2-ctl -d /dev/video4 --set-ctrl "$control_name=$control_value"
 }
 
+# Function to update the script
+update_script() {
+    wget -O /usr/cam_settings.sh https://raw.githubusercontent.com/victornpb/k1S/main/camera/cam_settings.sh
+    chmod +x /usr/cam_settings.sh
+    /usr/cam_settings.sh
+}
+
 while true; do
     clear
     echo "-------------------------------------------------------------------------------"
@@ -46,27 +53,27 @@ while true; do
     printf " %s Exposure Absolute ............... %5d\t(1 to 5000)\n" "$([ $selected -eq 13 ] && echo "▶ " || echo "")" "$EXPOSURE_ABSOLUTE"
     printf " %s Exposure Auto Priority .......... %5d\t(?)\n" "$([ $selected -eq 14 ] && echo "▶ " || echo "")" "$EXPOSURE_AUTO_PRIORITY"
     echo "-------------------------------------------------------------------------------"
-    echo " [W]↑ [S]↓ [A]- [D]+ [Q]Quit"
+    echo " [W]↑ [S]↓ [A]- [D]+  [U]Update  [Q]Quit"
     echo ""
 
     read -n 1 -s input
 
     case "$input" in
-        "w")
+        "w" | "W")
             # Select previous control
             selected=$((selected - 1))
             if [ $selected -lt 1 ]; then
                 selected=14
             fi
             ;;
-        "s")
+        "s" | "S")
             # Select previous control
             selected=$((selected + 1))
             if [ $selected -gt 14 ]; then
                 selected=1
             fi
             ;;
-        "d")
+        "d" | "D")
             # Increase control value
             case "$selected" in
                 1) BRIGHTNESS=$((BRIGHTNESS + 5)); set_control "brightness" "$BRIGHTNESS";;
@@ -85,7 +92,7 @@ while true; do
                 14) EXPOSURE_AUTO_PRIORITY=$((1 - EXPOSURE_AUTO_PRIORITY)); set_control "exposure_auto_priority" "$EXPOSURE_AUTO_PRIORITY";;
             esac
             ;;
-        "a")
+        "a" | "A")
             # Decrease control value
             case "$selected" in
                 1) BRIGHTNESS=$((BRIGHTNESS - 5)); set_control "brightness" "$BRIGHTNESS";;
@@ -104,7 +111,11 @@ while true; do
                 14) EXPOSURE_AUTO_PRIORITY=$((1 - EXPOSURE_AUTO_PRIORITY)); set_control "exposure_auto_priority" "$EXPOSURE_AUTO_PRIORITY";;
             esac
             ;;
-        "q")
+        "u" | "U")
+            # Update the script
+            update_script
+            ;;
+        "q" | "Q")
             break
             ;;
     esac
