@@ -1,6 +1,7 @@
 # Controlling camera settings
+Easily control your camera settings in real time using AWSD keys
+
 <img width="682" alt="image" src="https://github.com/victornpb/k1S/assets/3372598/ed8dc161-d8c1-4426-9cb9-e1bb07383755">
-It Allows you to change settings real time using AWSD keys
 
 ## Install the script
 ```sh
