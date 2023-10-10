@@ -1,25 +1,27 @@
 #!/bin/sh
-VERSION=v1.3.0
-
-# Initial values for webcam controls
-BRIGHTNESS=-10
-CONTRAST=50
-SATURATION=128
-HUE=0
-GAMMA=180
-GAIN=0
-WHITE_BALANCE_TEMP_AUTO=1
-POWER_LINE_FREQ=2
-WHITE_BALANCE_TEMP=4600
-SHARPNESS=3
-BACKLIGHT_COMP=2
-EXPOSURE_AUTO=1
-EXPOSURE_ABSOLUTE=245
-EXPOSURE_AUTO_PRIORITY=1
+VERSION=v1.4.0
 
 # Initialize selected control and step value
 selected=1
 step=10
+
+# Function to get current control values using v4l2-ctl
+get_controls() {
+    BRIGHTNESS=$(v4l2-ctl -d /dev/video4 --get-ctrl brightness | cut -d' ' -f2)
+    CONTRAST=$(v4l2-ctl -d /dev/video4 --get-ctrl contrast | cut -d' ' -f2)
+    SATURATION=$(v4l2-ctl -d /dev/video4 --get-ctrl saturation | cut -d' ' -f2)
+    HUE=$(v4l2-ctl -d /dev/video4 --get-ctrl hue | cut -d' ' -f2)
+    GAMMA=$(v4l2-ctl -d /dev/video4 --get-ctrl gamma | cut -d' ' -f2)
+    GAIN=$(v4l2-ctl -d /dev/video4 --get-ctrl gain | cut -d' ' -f2)
+    WHITE_BALANCE_TEMP_AUTO=$(v4l2-ctl -d /dev/video4 --get-ctrl white_balance_temperature_auto | cut -d' ' -f2)
+    POWER_LINE_FREQ=$(v4l2-ctl -d /dev/video4 --get-ctrl power_line_frequency | cut -d' ' -f2)
+    WHITE_BALANCE_TEMP=$(v4l2-ctl -d /dev/video4 --get-ctrl white_balance_temperature | cut -d' ' -f2)
+    SHARPNESS=$(v4l2-ctl -d /dev/video4 --get-ctrl sharpness | cut -d' ' -f2)
+    BACKLIGHT_COMP=$(v4l2-ctl -d /dev/video4 --get-ctrl backlight_compensation | cut -d' ' -f2)
+    EXPOSURE_AUTO=$(v4l2-ctl -d /dev/video4 --get-ctrl exposure_auto | cut -d' ' -f2)
+    EXPOSURE_ABSOLUTE=$(v4l2-ctl -d /dev/video4 --get-ctrl exposure_absolute | cut -d' ' -f2)
+    EXPOSURE_AUTO_PRIORITY=$(v4l2-ctl -d /dev/video4 --get-ctrl exposure_auto_priority | cut -d' ' -f2)
+}
 
 # Function to set control value using v4l2-ctl
 set_control() {
@@ -91,6 +93,8 @@ reset_defaults() {
     set_control "exposure_auto_priority" "$EXPOSURE_AUTO_PRIORITY"
 }
 
+get_controls
+
 while true; do
     clear
     echo "-------------------------------------------------------------------------------"
@@ -112,7 +116,7 @@ while true; do
     printf " %s Exposure Auto Priority .......... %5d\t(?)\n" "$([ $selected -eq 14 ] && echo "▶ " || echo "")" "$EXPOSURE_AUTO_PRIORITY"
     echo "-------------------------------------------------------------------------------"
     echo " [W]↑ [S]↓ [A]-$step [D]+$step  [f]Fine step [c]Coarse step"
-    echo " [R]Reset defaults [U]Update  [Q]Quit"
+    echo " [R]Reset defaults [G]Read values [U]Check for Update  [Q]Quit"
     echo ""
 
     read -n 1 -s input
@@ -181,6 +185,10 @@ while true; do
         "r" | "R")
             # Reset defaults
             reset_defaults
+            ;;
+        "g" | "G")
+            # Read values
+            get_controls
             ;;
         "u" | "U")
             # Update the script
