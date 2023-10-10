@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=v1.2.0
+VERSION=v1.2.1
 
 # Initial values for webcam controls
 BRIGHTNESS=-10
@@ -36,12 +36,12 @@ update_script() {
         second_line=$(echo "$remote_script" | cut -d$'\n' -f 2)
         echo "A new version is available ($second_line)! Do you want to update? (Y/N)"
         read -n 1 -r response
-        if [[ $response =~ ^[Yy]$ ]]; then
+        if [ "$response" = "Y" ] || [ "$response" = "y" ]; then
             echo "$remote_script" > /usr/cam_settings.sh  # Overwrite the local script with the remote version
             chmod +x /usr/cam_settings.sh
             echo "The script has been updated. Do you want to run the new version? (Y/N)"
             read -n 1 -r run_response
-            if [[ $run_response =~ ^[Yy]$ ]]; then
+            if [ "$run_response" = "Y" ] || [ "$run_response" = "y" ]; then
                 exec /usr/cam_settings.sh  # Run the new version
             else
                 echo "Update completed!"
@@ -51,6 +51,7 @@ update_script() {
             echo "Update canceled!"
             read -n 1
         fi
+
     else
         echo "Your script is already up to date."
         read -n 1
