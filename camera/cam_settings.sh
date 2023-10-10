@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=v1.2.1
+VERSION=v1.3.0
 
 # Initial values for webcam controls
 BRIGHTNESS=-10
@@ -58,6 +58,39 @@ update_script() {
     fi
 }
 
+# Function to set controls to default values
+reset_defaults() {
+    BRIGHTNESS=$DEFAULT_BRIGHTNESS
+    CONTRAST=$DEFAULT_CONTRAST
+    SATURATION=$DEFAULT_SATURATION
+    HUE=$DEFAULT_HUE
+    GAMMA=$DEFAULT_GAMMA
+    GAIN=$DEFAULT_GAIN
+    WHITE_BALANCE_TEMP_AUTO=$DEFAULT_WHITE_BALANCE_TEMP_AUTO
+    POWER_LINE_FREQ=$DEFAULT_POWER_LINE_FREQ
+    WHITE_BALANCE_TEMP=$DEFAULT_WHITE_BALANCE_TEMP
+    SHARPNESS=$DEFAULT_SHARPNESS
+    BACKLIGHT_COMP=$DEFAULT_BACKLIGHT_COMP
+    EXPOSURE_AUTO=$DEFAULT_EXPOSURE_AUTO
+    EXPOSURE_ABSOLUTE=$DEFAULT_EXPOSURE_ABSOLUTE
+    EXPOSURE_AUTO_PRIORITY=$DEFAULT_EXPOSURE_AUTO_PRIORITY
+    # Apply defaults to controls
+    set_control "brightness" "$BRIGHTNESS"
+    set_control "contrast" "$CONTRAST"
+    set_control "saturation" "$SATURATION"
+    set_control "hue" "$HUE"
+    set_control "gamma" "$GAMMA"
+    set_control "gain" "$GAIN"
+    set_control "white_balance_temperature_auto" "$WHITE_BALANCE_TEMP_AUTO"
+    set_control "power_line_frequency" "$POWER_LINE_FREQ"
+    set_control "white_balance_temperature" "$WHITE_BALANCE_TEMP"
+    set_control "sharpness" "$SHARPNESS"
+    set_control "backlight_compensation" "$BACKLIGHT_COMP"
+    set_control "exposure_auto" "$EXPOSURE_AUTO"
+    set_control "exposure_absolute" "$EXPOSURE_ABSOLUTE"
+    set_control "exposure_auto_priority" "$EXPOSURE_AUTO_PRIORITY"
+}
+
 while true; do
     clear
     echo "-------------------------------------------------------------------------------"
@@ -78,8 +111,8 @@ while true; do
     printf " %s Exposure Absolute ............... %5d\t(1 to 5000)\n" "$([ $selected -eq 13 ] && echo "▶ " || echo "")" "$EXPOSURE_ABSOLUTE"
     printf " %s Exposure Auto Priority .......... %5d\t(?)\n" "$([ $selected -eq 14 ] && echo "▶ " || echo "")" "$EXPOSURE_AUTO_PRIORITY"
     echo "-------------------------------------------------------------------------------"
-    echo " [W]↑ [S]↓ [A]-{$step} [D]+${step}  [f]Fine step [c]Coarse step"
-    echo " [U]Update  [Q]Quit"
+    echo " [W]↑ [S]↓ [A]-$step [D]+$step  [f]Fine step [c]Coarse step"
+    echo " [R]Reset defaults [U]Update  [Q]Quit"
     echo ""
 
     read -n 1 -s input
@@ -144,6 +177,10 @@ while true; do
         "c")
             # Set step to 10
             step=10
+            ;;
+        "r" | "R")
+            # Reset defaults
+            reset_defaults
             ;;
         "u" | "U")
             # Update the script
