@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=v1.4.0
+VERSION=v1.4.1
 
 # Initialize selected control and step value
 selected=1
@@ -62,20 +62,20 @@ update_script() {
 
 # Function to set controls to default values
 reset_defaults() {
-    BRIGHTNESS=$DEFAULT_BRIGHTNESS
-    CONTRAST=$DEFAULT_CONTRAST
-    SATURATION=$DEFAULT_SATURATION
-    HUE=$DEFAULT_HUE
-    GAMMA=$DEFAULT_GAMMA
-    GAIN=$DEFAULT_GAIN
-    WHITE_BALANCE_TEMP_AUTO=$DEFAULT_WHITE_BALANCE_TEMP_AUTO
-    POWER_LINE_FREQ=$DEFAULT_POWER_LINE_FREQ
-    WHITE_BALANCE_TEMP=$DEFAULT_WHITE_BALANCE_TEMP
-    SHARPNESS=$DEFAULT_SHARPNESS
-    BACKLIGHT_COMP=$DEFAULT_BACKLIGHT_COMP
-    EXPOSURE_AUTO=$DEFAULT_EXPOSURE_AUTO
-    EXPOSURE_ABSOLUTE=$DEFAULT_EXPOSURE_ABSOLUTE
-    EXPOSURE_AUTO_PRIORITY=$DEFAULT_EXPOSURE_AUTO_PRIORITY
+    BRIGHTNESS=0
+    CONTRAST=32
+    SATURATION=56
+    HUE=0
+    GAMMA=80
+    GAIN=0
+    WHITE_BALANCE_TEMP_AUTO=1
+    POWER_LINE_FREQ=1
+    WHITE_BALANCE_TEMP=4600
+    SHARPNESS=3
+    BACKLIGHT_COMP=1
+    EXPOSURE_AUTO=3
+    EXPOSURE_ABSOLUTE=156
+    EXPOSURE_AUTO_PRIORITY=0
     # Apply defaults to controls
     set_control "brightness" "$BRIGHTNESS"
     set_control "contrast" "$CONTRAST"
@@ -115,8 +115,10 @@ while true; do
     printf " %s Exposure Absolute ............... %5d\t(1 to 5000)\n" "$([ $selected -eq 13 ] && echo "▶ " || echo "")" "$EXPOSURE_ABSOLUTE"
     printf " %s Exposure Auto Priority .......... %5d\t(?)\n" "$([ $selected -eq 14 ] && echo "▶ " || echo "")" "$EXPOSURE_AUTO_PRIORITY"
     echo "-------------------------------------------------------------------------------"
-    echo " [W]↑ [S]↓ [A]-$step [D]+$step  [f]Fine step [c]Coarse step"
-    echo " [R]Reset defaults [G]Read values [U]Check for Update  [Q]Quit"
+    echo " [W]↑ [S]↓ [A]-$step [D]+$step  [F]Fine ajust [C]Coarse ajust"
+    echo ""
+    echo " [R]Reset defaults [G]Read values"
+    echo " [U]Check for Update  [Q]Quit"
     echo ""
 
     read -n 1 -s input
