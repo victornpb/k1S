@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=v1.1.6
+VERSION=v1.2.0
 
 # Initial values for webcam controls
 BRIGHTNESS=-10
@@ -17,8 +17,9 @@ EXPOSURE_AUTO=1
 EXPOSURE_ABSOLUTE=245
 EXPOSURE_AUTO_PRIORITY=1
 
-# Initialize selected control
+# Initialize selected control and step value
 selected=1
+step=10
 
 # Function to set control value using v4l2-ctl
 set_control() {
@@ -56,7 +57,6 @@ update_script() {
     fi
 }
 
-
 while true; do
     clear
     echo "-------------------------------------------------------------------------------"
@@ -77,7 +77,8 @@ while true; do
     printf " %s Exposure Absolute ............... %5d\t(1 to 5000)\n" "$([ $selected -eq 13 ] && echo "▶ " || echo "")" "$EXPOSURE_ABSOLUTE"
     printf " %s Exposure Auto Priority .......... %5d\t(?)\n" "$([ $selected -eq 14 ] && echo "▶ " || echo "")" "$EXPOSURE_AUTO_PRIORITY"
     echo "-------------------------------------------------------------------------------"
-    echo " [W]↑ [S]↓ [A]- [D]+  [U]Update  [Q]Quit"
+    echo " [W]↑ [S]↓ [A]-{$step} [D]+${step}  [f]Fine step [c]Coarse step"
+    echo " [U]Update  [Q]Quit"
     echo ""
 
     read -n 1 -s input
@@ -91,7 +92,7 @@ while true; do
             fi
             ;;
         "s" | "S")
-            # Select previous control
+            # Select next control
             selected=$((selected + 1))
             if [ $selected -gt 14 ]; then
                 selected=1
@@ -100,40 +101,48 @@ while true; do
         "d" | "D")
             # Increase control value
             case "$selected" in
-                1) BRIGHTNESS=$((BRIGHTNESS + 5)); set_control "brightness" "$BRIGHTNESS";;
-                2) CONTRAST=$((CONTRAST + 5)); set_control "contrast" "$CONTRAST";;
-                3) SATURATION=$((SATURATION + 5)); set_control "saturation" "$SATURATION";;
-                4) HUE=$((HUE + 1)); set_control "hue" "$HUE";;
-                5) GAMMA=$((GAMMA + 10)); set_control "gamma" "$GAMMA";;
-                6) GAIN=$((GAIN + 1)); set_control "gain" "$GAIN";;
-                7) WHITE_BALANCE_TEMP_AUTO=$((WHITE_BALANCE_TEMP_AUTO + 1)); set_control "white_balance_temperature_auto" "$WHITE_BALANCE_TEMP_AUTO";;
-                8) POWER_LINE_FREQ=$((POWER_LINE_FREQ + 1)); set_control "power_line_frequency" "$POWER_LINE_FREQ";;
-                9) WHITE_BALANCE_TEMP=$((WHITE_BALANCE_TEMP + 10)); set_control "white_balance_temperature" "$WHITE_BALANCE_TEMP";;
-                10) SHARPNESS=$((SHARPNESS + 1)); set_control "sharpness" "$SHARPNESS";;
-                11) BACKLIGHT_COMP=$((BACKLIGHT_COMP + 1)); set_control "backlight_compensation" "$BACKLIGHT_COMP";;
-                12) EXPOSURE_AUTO=$((EXPOSURE_AUTO + 1)); set_control "exposure_auto" "$EXPOSURE_AUTO";;
-                13) EXPOSURE_ABSOLUTE=$((EXPOSURE_ABSOLUTE + 10)); set_control "exposure_absolute" "$EXPOSURE_ABSOLUTE";;
-                14) EXPOSURE_AUTO_PRIORITY=$((EXPOSURE_AUTO_PRIORITY + 1)); set_control "exposure_auto_priority" "$EXPOSURE_AUTO_PRIORITY";;
+                1) BRIGHTNESS=$((BRIGHTNESS + step)); set_control "brightness" "$BRIGHTNESS";;
+                2) CONTRAST=$((CONTRAST + step)); set_control "contrast" "$CONTRAST";;
+                3) SATURATION=$((SATURATION + step)); set_control "saturation" "$SATURATION";;
+                4) HUE=$((HUE + step)); set_control "hue" "$HUE";;
+                5) GAMMA=$((GAMMA + step)); set_control "gamma" "$GAMMA";;
+                6) GAIN=$((GAIN + step)); set_control "gain" "$GAIN";;
+                7) WHITE_BALANCE_TEMP_AUTO=$((WHITE_BALANCE_TEMP_AUTO + step)); set_control "white_balance_temperature_auto" "$WHITE_BALANCE_TEMP_AUTO";;
+                8) POWER_LINE_FREQ=$((POWER_LINE_FREQ + step)); set_control "power_line_frequency" "$POWER_LINE_FREQ";;
+                9) WHITE_BALANCE_TEMP=$((WHITE_BALANCE_TEMP + step)); set_control "white_balance_temperature" "$WHITE_BALANCE_TEMP";;
+                10) SHARPNESS=$((SHARPNESS + step)); set_control "sharpness" "$SHARPNESS";;
+                11) BACKLIGHT_COMP=$((BACKLIGHT_COMP + step)); set_control "backlight_compensation" "$BACKLIGHT_COMP";;
+                12) EXPOSURE_AUTO=$((EXPOSURE_AUTO + step)); set_control "exposure_auto" "$EXPOSURE_AUTO";;
+                13) EXPOSURE_ABSOLUTE=$((EXPOSURE_ABSOLUTE + step)); set_control "exposure_absolute" "$EXPOSURE_ABSOLUTE";;
+                14) EXPOSURE_AUTO_PRIORITY=$((EXPOSURE_AUTO_PRIORITY + step)); set_control "exposure_auto_priority" "$EXPOSURE_AUTO_PRIORITY";;
             esac
             ;;
         "a" | "A")
             # Decrease control value
             case "$selected" in
-                1) BRIGHTNESS=$((BRIGHTNESS - 5)); set_control "brightness" "$BRIGHTNESS";;
-                2) CONTRAST=$((CONTRAST - 5)); set_control "contrast" "$CONTRAST";;
-                3) SATURATION=$((SATURATION - 5)); set_control "saturation" "$SATURATION";;
-                4) HUE=$((HUE - 1)); set_control "hue" "$HUE";;
-                5) GAMMA=$((GAMMA - 10)); set_control "gamma" "$GAMMA";;
-                 6) GAIN=$((GAIN - 1)); set_control "gain" "$GAIN";;
-                 7) WHITE_BALANCE_TEMP_AUTO=$((WHITE_BALANCE_TEMP_AUTO - 1)); set_control "white_balance_temperature_auto" "$WHITE_BALANCE_TEMP_AUTO";;
-                 8) POWER_LINE_FREQ=$((POWER_LINE_FREQ - 1)); set_control "power_line_frequency" "$POWER_LINE_FREQ";;
-                 9) WHITE_BALANCE_TEMP=$((WHITE_BALANCE_TEMP - 10)); set_control "white_balance_temperature" "$WHITE_BALANCE_TEMP";;
-                10) SHARPNESS=$((SHARPNESS - 1)); set_control "sharpness" "$SHARPNESS";;
-                11) BACKLIGHT_COMP=$((BACKLIGHT_COMP - 1)); set_control "backlight_compensation" "$BACKLIGHT_COMP";;
-                12) EXPOSURE_AUTO=$((EXPOSURE_AUTO - 1)); set_control "exposure_auto" "$EXPOSURE_AUTO";;
-                13) EXPOSURE_ABSOLUTE=$((EXPOSURE_ABSOLUTE - 10)); set_control "exposure_absolute" "$EXPOSURE_ABSOLUTE";;
-                14) EXPOSURE_AUTO_PRIORITY=$((EXPOSURE_AUTO_PRIORITY - 1)); set_control "exposure_auto_priority" "$EXPOSURE_AUTO_PRIORITY";;
+                1) BRIGHTNESS=$((BRIGHTNESS - step)); set_control "brightness" "$BRIGHTNESS";;
+                2) CONTRAST=$((CONTRAST - step)); set_control "contrast" "$CONTRAST";;
+                3) SATURATION=$((SATURATION - step)); set_control "saturation" "$SATURATION";;
+                4) HUE=$((HUE - step)); set_control "hue" "$HUE";;
+                5) GAMMA=$((GAMMA - step)); set_control "gamma" "$GAMMA";;
+                6) GAIN=$((GAIN - step)); set_control "gain" "$GAIN";;
+                7) WHITE_BALANCE_TEMP_AUTO=$((WHITE_BALANCE_TEMP_AUTO - step)); set_control "white_balance_temperature_auto" "$WHITE_BALANCE_TEMP_AUTO";;
+                8) POWER_LINE_FREQ=$((POWER_LINE_FREQ - step)); set_control "power_line_frequency" "$POWER_LINE_FREQ";;
+                9) WHITE_BALANCE_TEMP=$((WHITE_BALANCE_TEMP - step)); set_control "white_balance_temperature" "$WHITE_BALANCE_TEMP";;
+                10) SHARPNESS=$((SHARPNESS - step)); set_control "sharpness" "$SHARPNESS";;
+                11) BACKLIGHT_COMP=$((BACKLIGHT_COMP - step)); set_control "backlight_compensation" "$BACKLIGHT_COMP";;
+                12) EXPOSURE_AUTO=$((EXPOSURE_AUTO - step)); set_control "exposure_auto" "$EXPOSURE_AUTO";;
+                13) EXPOSURE_ABSOLUTE=$((EXPOSURE_ABSOLUTE - step)); set_control "exposure_absolute" "$EXPOSURE_ABSOLUTE";;
+                14) EXPOSURE_AUTO_PRIORITY=$((EXPOSURE_AUTO_PRIORITY - step)); set_control "exposure_auto_priority" "$EXPOSURE_AUTO_PRIORITY";;
             esac
+            ;;
+        "f")
+            # Set step to 1
+            step=1
+            ;;
+        "c")
+            # Set step to 10
+            step=10
             ;;
         "u" | "U")
             # Update the script
