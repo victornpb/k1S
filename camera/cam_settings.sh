@@ -1,9 +1,10 @@
 #!/bin/sh
-VERSION=v1.5.0
+VERSION=v1.5.1
 
 # Initialize selected control and step value
 selected=1
 step=10
+CONFIG_FILE=/usr/cam.ini
 
 # Function to get current control values using v4l2-ctl
 get_controls() {
@@ -48,6 +49,7 @@ save_to_file() {
     echo "EXPOSURE_ABSOLUTE=$EXPOSURE_ABSOLUTE" >> "$CONFIG_FILE"
     echo "EXPOSURE_AUTO_PRIORITY=$EXPOSURE_AUTO_PRIORITY" >> "$CONFIG_FILE"
     echo "Configuration saved to $CONFIG_FILE"
+    read -n 1
 }
 
 # Function to load control values from a file
@@ -73,6 +75,7 @@ load_from_file() {
     else
         echo "Configuration file $CONFIG_FILE does not exist. Please save values first (option 'O')."
     fi
+    read -n 1
 }
 
 # Function to check and update the script
@@ -162,8 +165,8 @@ while true; do
     echo "-------------------------------------------------------------------------------"
     echo " [W]↑ [S]↓ [A]-$step [D]+$step  [F]Fine ajust [C]Coarse ajust"
     echo ""
-    echo " [O]Save [L]Load [R]Reset defaults [G]Refresh"
-    echo " [U]Check for Update  [Q]Quit"
+    echo " [O]Save [L]Load [R]Reset defaults [E]Refresh"
+    echo " [U]Check for Update  [X]Quit"
     echo ""
 
     read -n 1 -s input
