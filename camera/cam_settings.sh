@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=v1.5.1
+VERSION=v1.5.2
 
 # Initialize selected control and step value
 selected=1
@@ -7,7 +7,7 @@ step=10
 CONFIG_FILE=/usr/cam.ini
 
 # Function to get current control values using v4l2-ctl
-get_controls() {
+read_current_values() {
     BRIGHTNESS=$(v4l2-ctl -d /dev/video4 --get-ctrl brightness | cut -d' ' -f2)
     CONTRAST=$(v4l2-ctl -d /dev/video4 --get-ctrl contrast | cut -d' ' -f2)
     SATURATION=$(v4l2-ctl -d /dev/video4 --get-ctrl saturation | cut -d' ' -f2)
@@ -49,7 +49,6 @@ save_to_file() {
     echo "EXPOSURE_ABSOLUTE=$EXPOSURE_ABSOLUTE" >> "$CONFIG_FILE"
     echo "EXPOSURE_AUTO_PRIORITY=$EXPOSURE_AUTO_PRIORITY" >> "$CONFIG_FILE"
     echo "Configuration saved to $CONFIG_FILE"
-    read -n 1
 }
 
 # Function to load control values from a file
@@ -74,37 +73,6 @@ load_from_file() {
         echo "Configuration loaded from $CONFIG_FILE"
     else
         echo "Configuration file $CONFIG_FILE does not exist. Please save values first (option 'O')."
-    fi
-    read -n 1
-}
-
-# Function to check and update the script
-update_script() {
-    remote_script=$(wget --no-check-certificate -qO- https://raw.githubusercontent.com/victornpb/k1S/main/camera/cam_settings.sh)
-    local_script=$(cat /usr/cam_settings.sh)  # Read the current script content
-    if [ "$remote_script" != "$local_script" ]; then
-        second_line=$(echo "$remote_script" | cut -d$'\n' -f 2)
-        echo "A new version is available ($second_line)! Do you want to update? (Y/N)"
-        read -n 1 -r response
-        if [ "$response" = "Y" ] || [ "$response" = "y" ]; then
-            echo "$remote_script" > /usr/cam_settings.sh  # Overwrite the local script with the remote version
-            chmod +x /usr/cam_settings.sh
-            echo "The script has been updated. Do you want to run the new version? (Y/N)"
-            read -n 1 -r run_response
-            if [ "$run_response" = "Y" ] || [ "$run_response" = "y" ]; then
-                exec /usr/cam_settings.sh  # Run the new version
-            else
-                echo "Update completed!"
-                exit
-            fi
-        else
-            echo "Update canceled!"
-            read -n 1
-        fi
-
-    else
-        echo "Your script is already up to date."
-        read -n 1
     fi
 }
 
@@ -141,7 +109,46 @@ reset_defaults() {
     set_control "exposure_auto_priority" "$EXPOSURE_AUTO_PRIORITY"
 }
 
-get_controls
+# Function to check and update the script
+update_script() {
+    remote_script=$(wget --no-check-certificate -qO- https://raw.githubusercontent.com/victornpb/k1S/main/camera/cam_settings.sh)
+    local_script=$(cat /usr/cam_settings.sh)  # Read the current script content
+    if [ "$remote_script" != "$local_script" ]; then
+        second_line=$(echo "$remote_script" | cut -d$'\n' -f 2)
+        echo "A new version is available ($second_line)! Do you want to update? (Y/N)"
+        read -n 1 -r response
+        if [ "$response" = "Y" ] || [ "$response" = "y" ]; then
+            echo "$remote_script" > /usr/cam_settings.sh  # Overwrite the local script with the remote version
+            chmod +x /usr/cam_settings.sh
+            echo "The script has been updated. Do you want to run the new version? (Y/N)"
+            read -n 1 -r run_response
+            if [ "$run_response" = "Y" ] || [ "$run_response" = "y" ]; then
+                exec /usr/cam_settings.sh  # Run the new version
+            else
+                echo "Update completed!"
+                exit
+            fi
+        else
+            echo "Update canceled!"
+            read -n 1
+        fi
+
+    else
+        echo "Your script is already up to date."
+        read -n 1
+    fi
+}
+
+
+# main
+
+read_current_values
+
+# Check for the -l flag
+if [ "$1" = "-l" ]; then
+    load_from_file
+    exit
+fi
 
 while true; do
     clear
@@ -163,10 +170,10 @@ while true; do
     printf " %s Exposure Absolute ............... %5d\t(1 to 5000)\n" "$([ $selected -eq 13 ] && echo "▶ " || echo "")" "$EXPOSURE_ABSOLUTE"
     printf " %s Exposure Auto Priority .......... %5d\t(?)\n" "$([ $selected -eq 14 ] && echo "▶ " || echo "")" "$EXPOSURE_AUTO_PRIORITY"
     echo "-------------------------------------------------------------------------------"
-    echo " [W]↑ [S]↓ [A]-$step [D]+$step  [F]Fine ajust [C]Coarse ajust"
+    echo " [W] ↑   [S] ↓   [A] -$step   [D] +$step   [F] Fine ajust   [C] Coarse ajust"
     echo ""
-    echo " [O]Save [L]Load [R]Reset defaults [E]Refresh"
-    echo " [U]Check for Update  [X]Quit"
+    echo " [O] Save   [L] Load   [R] Reset defaults   [E] Refresh"
+    echo " [U] Check for Update   [X] Quit"
     echo ""
 
     read -n 1 -s input
@@ -195,14 +202,14 @@ while true; do
                 4) HUE=$((HUE + step)); set_control "hue" "$HUE";;
                 5) GAMMA=$((GAMMA + step)); set_control "gamma" "$GAMMA";;
                 6) GAIN=$((GAIN + step)); set_control "gain" "$GAIN";;
-                7) WHITE_BALANCE_TEMP_AUTO=$((WHITE_BALANCE_TEMP_AUTO + step)); set_control "white_balance_temperature_auto" "$WHITE_BALANCE_TEMP_AUTO";;
-                8) POWER_LINE_FREQ=$((POWER_LINE_FREQ + step)); set_control "power_line_frequency" "$POWER_LINE_FREQ";;
+                7) WHITE_BALANCE_TEMP_AUTO=$((WHITE_BALANCE_TEMP_AUTO + 1)); set_control "white_balance_temperature_auto" "$WHITE_BALANCE_TEMP_AUTO";;
+                8) POWER_LINE_FREQ=$((POWER_LINE_FREQ + 1)); set_control "power_line_frequency" "$POWER_LINE_FREQ";;
                 9) WHITE_BALANCE_TEMP=$((WHITE_BALANCE_TEMP + step)); set_control "white_balance_temperature" "$WHITE_BALANCE_TEMP";;
-                10) SHARPNESS=$((SHARPNESS + step)); set_control "sharpness" "$SHARPNESS";;
-                11) BACKLIGHT_COMP=$((BACKLIGHT_COMP + step)); set_control "backlight_compensation" "$BACKLIGHT_COMP";;
-                12) EXPOSURE_AUTO=$((EXPOSURE_AUTO + step)); set_control "exposure_auto" "$EXPOSURE_AUTO";;
+                10) SHARPNESS=$((SHARPNESS + 1)); set_control "sharpness" "$SHARPNESS";;
+                11) BACKLIGHT_COMP=$((BACKLIGHT_COMP + 1)); set_control "backlight_compensation" "$BACKLIGHT_COMP";;
+                12) EXPOSURE_AUTO=$((EXPOSURE_AUTO + 1)); set_control "exposure_auto" "$EXPOSURE_AUTO";;
                 13) EXPOSURE_ABSOLUTE=$((EXPOSURE_ABSOLUTE + step)); set_control "exposure_absolute" "$EXPOSURE_ABSOLUTE";;
-                14) EXPOSURE_AUTO_PRIORITY=$((EXPOSURE_AUTO_PRIORITY + step)); set_control "exposure_auto_priority" "$EXPOSURE_AUTO_PRIORITY";;
+                14) EXPOSURE_AUTO_PRIORITY=$((EXPOSURE_AUTO_PRIORITY + 1)); set_control "exposure_auto_priority" "$EXPOSURE_AUTO_PRIORITY";;
             esac
             ;;
         "a" | "A")
@@ -214,39 +221,41 @@ while true; do
                 4) HUE=$((HUE - step)); set_control "hue" "$HUE";;
                 5) GAMMA=$((GAMMA - step)); set_control "gamma" "$GAMMA";;
                 6) GAIN=$((GAIN - step)); set_control "gain" "$GAIN";;
-                7) WHITE_BALANCE_TEMP_AUTO=$((WHITE_BALANCE_TEMP_AUTO - step)); set_control "white_balance_temperature_auto" "$WHITE_BALANCE_TEMP_AUTO";;
-                8) POWER_LINE_FREQ=$((POWER_LINE_FREQ - step)); set_control "power_line_frequency" "$POWER_LINE_FREQ";;
+                7) WHITE_BALANCE_TEMP_AUTO=$((WHITE_BALANCE_TEMP_AUTO - 1)); set_control "white_balance_temperature_auto" "$WHITE_BALANCE_TEMP_AUTO";;
+                8) POWER_LINE_FREQ=$((POWER_LINE_FREQ - 1)); set_control "power_line_frequency" "$POWER_LINE_FREQ";;
                 9) WHITE_BALANCE_TEMP=$((WHITE_BALANCE_TEMP - step)); set_control "white_balance_temperature" "$WHITE_BALANCE_TEMP";;
-                10) SHARPNESS=$((SHARPNESS - step)); set_control "sharpness" "$SHARPNESS";;
-                11) BACKLIGHT_COMP=$((BACKLIGHT_COMP - step)); set_control "backlight_compensation" "$BACKLIGHT_COMP";;
-                12) EXPOSURE_AUTO=$((EXPOSURE_AUTO - step)); set_control "exposure_auto" "$EXPOSURE_AUTO";;
+                10) SHARPNESS=$((SHARPNESS - 1)); set_control "sharpness" "$SHARPNESS";;
+                11) BACKLIGHT_COMP=$((BACKLIGHT_COMP - 1)); set_control "backlight_compensation" "$BACKLIGHT_COMP";;
+                12) EXPOSURE_AUTO=$((EXPOSURE_AUTO - 1)); set_control "exposure_auto" "$EXPOSURE_AUTO";;
                 13) EXPOSURE_ABSOLUTE=$((EXPOSURE_ABSOLUTE - step)); set_control "exposure_absolute" "$EXPOSURE_ABSOLUTE";;
-                14) EXPOSURE_AUTO_PRIORITY=$((EXPOSURE_AUTO_PRIORITY - step)); set_control "exposure_auto_priority" "$EXPOSURE_AUTO_PRIORITY";;
+                14) EXPOSURE_AUTO_PRIORITY=$((EXPOSURE_AUTO_PRIORITY - 1)); set_control "exposure_auto_priority" "$EXPOSURE_AUTO_PRIORITY";;
             esac
             ;;
-        "f")
-            # Set step to 1
+        "f" | "F")
+            # Fine adjust
             step=1
             ;;
-        "c")
-            # Set step to 10
+        "c" | "C")
+            # Coarse adjust
             step=10
             ;;
         "r" | "R")
             # Reset defaults
             reset_defaults
             ;;
-        "g" | "G")
+        "e" | "E")
             # Read values
-            get_controls
+            read_current_values
             ;;
          "o" | "O")
             # Save values to a file
             save_to_file
+            read -n 1
             ;;
         "l" | "L")
             # Load values from a file
             load_from_file
+            read -n 1
             ;;
         "u" | "U")
             # Update the script
