@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=v1.6.0
+VERSION=v1.7.0
 
 # Initialize selected control and step value
 selected=1
@@ -144,6 +144,16 @@ update_script() {
 
 read_current_values
 
+# Check for the -r flag
+if [ "$1" = "-r" ]; then
+    reset_defaults
+    exit
+fi
+# Check for the -s flag
+if [ "$1" = "-s" ]; then
+    save_to_file
+    exit
+fi
 # Check for the -l flag
 if [ "$1" = "-l" ]; then
     load_from_file
