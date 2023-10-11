@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=v1.5.2
+VERSION=v1.6.0
 
 # Initialize selected control and step value
 selected=1
@@ -261,7 +261,7 @@ while true; do
             # Update the script
             update_script
             ;;
-        "q" | "Q")
+        "x" | "X")
             break
             ;;
     esac
