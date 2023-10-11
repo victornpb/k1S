@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=v1.4.1
+VERSION=v1.5.0
 
 # Initialize selected control and step value
 selected=1
@@ -28,6 +28,51 @@ set_control() {
     local control_name="$1"
     local control_value="$2"
     v4l2-ctl -d /dev/video4 --set-ctrl "$control_name=$control_value"
+}
+
+
+# Function to save current control values to a file
+save_to_file() {
+    echo "BRIGHTNESS=$BRIGHTNESS" > "$CONFIG_FILE"
+    echo "CONTRAST=$CONTRAST" >> "$CONFIG_FILE"
+    echo "SATURATION=$SATURATION" >> "$CONFIG_FILE"
+    echo "HUE=$HUE" >> "$CONFIG_FILE"
+    echo "GAMMA=$GAMMA" >> "$CONFIG_FILE"
+    echo "GAIN=$GAIN" >> "$CONFIG_FILE"
+    echo "WHITE_BALANCE_TEMP_AUTO=$WHITE_BALANCE_TEMP_AUTO" >> "$CONFIG_FILE"
+    echo "POWER_LINE_FREQ=$POWER_LINE_FREQ" >> "$CONFIG_FILE"
+    echo "WHITE_BALANCE_TEMP=$WHITE_BALANCE_TEMP" >> "$CONFIG_FILE"
+    echo "SHARPNESS=$SHARPNESS" >> "$CONFIG_FILE"
+    echo "BACKLIGHT_COMP=$BACKLIGHT_COMP" >> "$CONFIG_FILE"
+    echo "EXPOSURE_AUTO=$EXPOSURE_AUTO" >> "$CONFIG_FILE"
+    echo "EXPOSURE_ABSOLUTE=$EXPOSURE_ABSOLUTE" >> "$CONFIG_FILE"
+    echo "EXPOSURE_AUTO_PRIORITY=$EXPOSURE_AUTO_PRIORITY" >> "$CONFIG_FILE"
+    echo "Configuration saved to $CONFIG_FILE"
+}
+
+# Function to load control values from a file
+load_from_file() {
+    if [ -e "$CONFIG_FILE" ]; then
+        . "$CONFIG_FILE"
+        # Apply loaded values to controls
+        set_control "brightness" "$BRIGHTNESS"
+        set_control "contrast" "$CONTRAST"
+        set_control "saturation" "$SATURATION"
+        set_control "hue" "$HUE"
+        set_control "gamma" "$GAMMA"
+        set_control "gain" "$GAIN"
+        set_control "white_balance_temperature_auto" "$WHITE_BALANCE_TEMP_AUTO"
+        set_control "power_line_frequency" "$POWER_LINE_FREQ"
+        set_control "white_balance_temperature" "$WHITE_BALANCE_TEMP"
+        set_control "sharpness" "$SHARPNESS"
+        set_control "backlight_compensation" "$BACKLIGHT_COMP"
+        set_control "exposure_auto" "$EXPOSURE_AUTO"
+        set_control "exposure_absolute" "$EXPOSURE_ABSOLUTE"
+        set_control "exposure_auto_priority" "$EXPOSURE_AUTO_PRIORITY"
+        echo "Configuration loaded from $CONFIG_FILE"
+    else
+        echo "Configuration file $CONFIG_FILE does not exist. Please save values first (option 'O')."
+    fi
 }
 
 # Function to check and update the script
@@ -117,7 +162,7 @@ while true; do
     echo "-------------------------------------------------------------------------------"
     echo " [W]↑ [S]↓ [A]-$step [D]+$step  [F]Fine ajust [C]Coarse ajust"
     echo ""
-    echo " [R]Reset defaults [G]Read values"
+    echo " [O]Save [L]Load [R]Reset defaults [G]Refresh"
     echo " [U]Check for Update  [Q]Quit"
     echo ""
 
@@ -191,6 +236,14 @@ while true; do
         "g" | "G")
             # Read values
             get_controls
+            ;;
+         "o" | "O")
+            # Save values to a file
+            save_to_file
+            ;;
+        "l" | "L")
+            # Load values from a file
+            load_from_file
             ;;
         "u" | "U")
             # Update the script
